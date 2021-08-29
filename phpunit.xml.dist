@@ -1,0 +1,19 @@
+<phpunit colors="true" columns="120">
+    <testsuites>
+        <testsuite name="Main">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <coverage includeUncoveredFiles="true" processUncoveredFiles="true" pathCoverage="true">
+        <include>
+            <directory>src</directory>
+        </include>
+        <report>
+            <clover outputFile="build/clover.xml" />
+            <html outputDirectory="build/html" />
+        </report>
+    </coverage>
+    <php>
+        <ini name="memory_limit" value="-1" />
+    </php>
+</phpunit>

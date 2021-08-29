@@ -1,0 +1,24 @@
+{
+    "name": "cuongvm17/hashtree",
+    "type": "library",
+    "description": "Hash tree with multiple leaf.",
+    "keywords": ["merkle tree", "hash tree", "multiple leaf"],
+    "authors": [
+        {
+            "name": "Cuong Vu",
+            "email": "cuongvm17@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5 || ^7.5 || ^8.5 || ^9.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "HashTree\\": "src/"
+        }
+    }
+}
