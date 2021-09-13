@@ -23,51 +23,73 @@ class HashTree implements HashingInterface
         int $size
     ): string
     {
-        $len = count($data);
+        $buffer = $this->convertArrayToBuffer($data);
 
-        if ($len === 1) {
-            return $this->hexitHash($data[0]);
+        return $this->exec($buffer, $size);
+    }
+
+    /**
+     * @param array $buffer
+     * @param int $size
+     * @param bool $flag
+     * @return string
+     */
+    private function exec(array $buffer, int $size, bool $flag = false): string
+    {
+        $len = count($buffer);
+
+        if ($len === 1 && !$flag) {
+            return $this->hexitHash($buffer[0]);
         }
 
         if ($len <= $size) {
-            return $this->getHashOfArray($data, false);
+            return $this->getHashOfArray($buffer, true);
         }
 
         $nextLevel = [];
 
         for ($i = 0; $i < $len; $i += $size)
         {
-            $nextLevel[] = $this->getHashOfArray(array_slice($data, $i, $size));
+            $nextLevel[] = $this->getHashOfArray(array_slice($buffer, $i, $size));
         }
 
-        return $this->calculate($nextLevel, $size);
+        return $this->exec($nextLevel, $size, true);
+    }
+
+    /**
+     * @param array $buffer
+     * @param bool $isDone
+     * @return string
+     */
+    private function getHashOfArray(
+        array $buffer,
+        bool $isDone = false
+    )
+    {
+        $hashKey = join("", $buffer);
+
+        if ($isDone) {
+            $hash = $this->hexitHash($hashKey);
+        } else {
+            $hash = $this->binaryHash($hashKey);
+        }
+
+        return $hash;
     }
 
     /**
      * @param array $data
-     * @param bool $isBinary
-     * @return string
+     * @return array
      */
-    private function getHashOfArray(
-        array $data,
-        bool $isBinary = true
-    )
+    private function convertArrayToBuffer(array $data): array
     {
-        $buffer = [];
+        $len = count($data);
 
-        foreach ($data as $value)
+        for ($i = 0; $i < $len; $i++)
         {
-            $buffer[] = $this->binaryHash($value);
+            $data[$i] = $this->binaryHash($data[$i]);
         }
 
-        $hashKey = join("", $buffer);
-
-        if ($isBinary) {
-            $hash = $this->binaryHash($hashKey);
-        } else {
-            $hash = $this->hexitHash($hashKey);
-        }
-
-        return $hash;
+        return $data;
     }
 }
